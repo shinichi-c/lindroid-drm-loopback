@@ -655,7 +655,12 @@ void evdi_painter_dpms_notify(struct evdi_painter *painter, int mode)
 
 	switch (mode) {
 	case DRM_MODE_DPMS_ON:
-		fallthrough;
+        // Intentionally fall through
+#if __has_attribute(fallthrough)
+        __attribute__((fallthrough));
+#elif defined(__GNUC__) && __GNUC__ >= 7
+        __attribute__((__fallthrough__)); /* GCC-specific older syntax */
+#endif
 	case DRM_MODE_DPMS_STANDBY:
 	case DRM_MODE_DPMS_SUSPEND:
 	case DRM_MODE_DPMS_OFF:
